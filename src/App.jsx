@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Home, BarChart2, Repeat, Zap, Wallet, Search, Bell, Headset, 
+  Home, BarChart2, Repeat, Zap, Wallet, Search, Bell, Headphones, 
   ArrowUpRight, ArrowDownLeft, Eye, EyeOff, MoreHorizontal, TrendingUp 
 } from 'lucide-react';
 
@@ -42,7 +42,7 @@ export default function App() {
     <div className="min-h-screen text-white font-sans antialiased" style={{ backgroundColor: COLORS.bg }}>
       <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
       
-      <div className="max-w-md mx-auto min-h-screen relative shadow-2xl bg-[#0b0e11] overflow-hidden">
+      <div className="max-w-md mx-auto min-h-screen relative shadow-2xl bg-[#0b0e11] overflow-hidden border-x border-gray-800/30">
         
         {/* Header Section */}
         <div className="p-4 flex justify-between items-center border-b border-gray-800/50">
@@ -56,7 +56,7 @@ export default function App() {
           <div className="flex gap-4 opacity-80">
             <Search size={20} />
             <Bell size={20} />
-            <Headset size={20} />
+            <Headphones size={20} />
           </div>
         </div>
 
@@ -91,6 +91,7 @@ export default function App() {
       <style>{`
         .tabular-nums { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
         ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
@@ -128,7 +129,7 @@ const HomeView = ({ cryptoData }) => (
         { n: 'Deposit', i: ArrowUpRight },
         { n: 'Withdraw', i: ArrowDownLeft },
         { n: 'Invite', i: TrendingUp },
-        { n: 'Support', i: Headset },
+        { n: 'Support', i: Headphones },
       ].map(action => (
         <div key={action.n} className="flex flex-col items-center gap-2">
           <div className="w-11 h-11 rounded-xl bg-[#1e2329] flex items-center justify-center border border-gray-800 hover:border-yellow-500 transition-colors">
@@ -143,7 +144,7 @@ const HomeView = ({ cryptoData }) => (
     <div className="mt-4">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-bold">Market Trends</h3>
-        <span className="text-xs text-yellow-500">View All</span>
+        <span className="text-xs text-yellow-500 font-bold cursor-pointer">View All</span>
       </div>
       <div className="space-y-4">
         {cryptoData.map(coin => (
@@ -168,12 +169,12 @@ const HomeView = ({ cryptoData }) => (
 const MarketsView = ({ cryptoData }) => (
   <div className="p-4 animate-in slide-in-from-right duration-300">
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-xl font-black italic">MARKETS</h1>
+      <h1 className="text-xl font-black italic tracking-tighter uppercase">MARKETS</h1>
       <Search size={20} className="text-gray-400" />
     </div>
     <div className="flex gap-6 mb-4 border-b border-gray-800 text-sm overflow-x-auto no-scrollbar">
       {['Favorites', 'Spot', 'Futures', 'Feed'].map((t, i) => (
-        <span key={t} className={`pb-2 whitespace-nowrap ${i === 1 ? 'text-yellow-500 border-b-2 border-yellow-500 font-bold' : 'text-gray-500'}`}>{t}</span>
+        <span key={t} className={`pb-2 whitespace-nowrap transition-all ${i === 1 ? 'text-yellow-500 border-b-2 border-yellow-500 font-bold' : 'text-gray-500'}`}>{t}</span>
       ))}
     </div>
     <div className="space-y-5">
@@ -189,7 +190,7 @@ const MarketsView = ({ cryptoData }) => (
                 <span className="text-[10px] text-gray-500 tabular-nums">≈${coin.price.toFixed(2)}</span>
              </div>
              <div className={`w-16 py-2 rounded text-[11px] font-bold text-white text-center ${coin.change >= 0 ? 'bg-[#02c076]' : 'bg-[#f6465d]'}`}>
-                {coin.change}%
+                {coin.change >= 0 ? '+' : ''}{coin.change}%
              </div>
           </div>
         </div>
@@ -205,7 +206,7 @@ const AssetsView = () => (
       <div className="absolute top-0 right-0 p-4 opacity-10"><Wallet size={80} /></div>
       <div className="relative z-10">
         <div className="flex items-center gap-2 text-xs text-gray-400 mb-2 font-bold uppercase tracking-widest">
-          Estimated Balance <Eye size={14} />
+          Estimated Balance <Eye size={14} className="cursor-pointer" />
         </div>
         <div className="text-3xl font-black tabular-nums">335.73 <span className="text-sm font-bold text-yellow-500 ml-1">USDT</span></div>
         <div className="text-[11px] text-gray-500 mt-1">≈ $335.73</div>
@@ -216,8 +217,8 @@ const AssetsView = () => (
     </div>
 
     <div className="grid grid-cols-2 gap-3 mb-8">
-      <button className="py-3 bg-yellow-500 text-black rounded-lg font-black text-sm uppercase">Deposit</button>
-      <button className="py-3 bg-[#2b3139] text-white rounded-lg font-black text-sm uppercase border border-gray-700">Withdraw</button>
+      <button className="py-3 bg-yellow-500 text-black rounded-lg font-black text-sm uppercase active:scale-95 transition-transform">Deposit</button>
+      <button className="py-3 bg-[#2b3139] text-white rounded-lg font-black text-sm uppercase border border-gray-700 active:scale-95 transition-transform">Withdraw</button>
     </div>
 
     <div className="space-y-4">
@@ -227,7 +228,7 @@ const AssetsView = () => (
           <span className="text-sm font-bold">{acc} Account</span>
           <div className="text-right">
             <span className="text-sm font-black tabular-nums">{i === 0 ? '335.73' : '0.00'}</span>
-            <span className="text-[10px] text-gray-500 ml-1">USDT</span>
+            <span className="text-[10px] text-gray-500 ml-1 font-bold">USDT</span>
           </div>
         </div>
       ))}
